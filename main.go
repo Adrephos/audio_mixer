@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/Adrephos/audio_mixer/src"
-	"github.com/Vernacular-ai/godub"
+	"github.com/iFaceless/godub"
 )
 
 func main() {
@@ -13,9 +13,14 @@ func main() {
 	args := os.Args[1:]
 
 	if len(args) >= 3 {
-		mix := src.Mix(args[0], args[1])
+		mix, err := src.Mix(args[0], args[1])
 
-		godub.NewExporter(fmt.Sprintf("./songs/%s.mp3", args[2])).WithDstFormat("mp3").Export(mix)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			godub.NewExporter(fmt.Sprintf("%s", args[2])).WithDstFormat("mp3").Export(mix)
+		}
+
 	}	else {
 		fmt.Println("Not enough arguments")
 	}
