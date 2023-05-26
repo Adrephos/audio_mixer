@@ -40,7 +40,7 @@ func Mix(path1 string, path2 string) (*godub.AudioSegment, error) {
 
 func Play(path string, duration time.Duration) {
 	// Start ffplay command
-	cmd := exec.Command("mpv", "--volume=40", "--no-video", "--quiet", path)
+	cmd := exec.Command("ffplay", "-nodisp", "-autoexit", path)
 
 	// Start the command
 	fmt.Println("Playing", path)
@@ -62,13 +62,13 @@ func Play(path string, duration time.Duration) {
 			// Calculate the time remaining in the song.
 			remainingTime := now.Sub(before)
 			remainingFormat := fmt.Sprintf("%02d:%02d", int(remainingTime.Minutes()), int(remainingTime.Seconds()-float64(int(remainingTime.Minutes())*60)))
+
+			// Print the time remaining in the song.
+			fmt.Printf("\rTime elapsed: %v / %v", remainingFormat, durationFormat)
 			
 			if int(remainingTime.Seconds()) >= int(duration.Seconds()) {
 				break
 			}
-
-			// Print the time remaining in the song.
-			fmt.Printf("\rTime elapsed: %v / %v", remainingFormat, durationFormat)
 
 			// Sleep for 1 second.
 			time.Sleep(1 * time.Second)

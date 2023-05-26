@@ -36,5 +36,7 @@ func main() {
 	}	else {
 		fmt.Println("Not enough arguments")
 	}
+
+	src.Download("https://www.youtube.com/watch?v=Ot5Y1WYVKkI", "songs/test")
 	
 }
