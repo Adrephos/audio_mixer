@@ -12,12 +12,14 @@ import (
 
 func Mix(path1 string, path2 string, outputPath string) (*godub.AudioSegment, error) {
 	fmt.Println("Mxing songs ....")
+	// Load first audio file
 	segment, err := godub.NewLoader().Load(path1)
 
 	if err != nil {
 		return nil, err
 	}
 
+	// Load second audio file
 	segment2, err := godub.NewLoader().Load(path2)
 
 	if err != nil {
@@ -26,6 +28,7 @@ func Mix(path1 string, path2 string, outputPath string) (*godub.AudioSegment, er
 
 	var overlaidSeg *godub.AudioSegment
 
+	// Overlay over the longest song
 	if segment.Duration() > segment2.Duration() {
 		overlaidSeg, err = segment.Overlay(segment2, &godub.OverlayConfig{LoopToEnd: false})
 	} else {
@@ -36,6 +39,7 @@ func Mix(path1 string, path2 string, outputPath string) (*godub.AudioSegment, er
 		return nil, err
 	}
 
+	// Export overlaid song
 	godub.NewExporter(outputPath).WithDstFormat("mp3").Export(overlaidSeg)
 	fmt.Println("Done")
 

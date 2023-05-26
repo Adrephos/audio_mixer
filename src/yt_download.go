@@ -13,8 +13,10 @@ import (
 )
 
 func download(wg *sync.WaitGroup, url string, outputName *string, errOut *error) {
+	// Close wg at the end
 	defer wg.Done()
 
+	// Create YouTube client and get video with URL
 	var client yt.Client
 	video, err := client.GetVideo(url)
 
@@ -23,6 +25,7 @@ func download(wg *sync.WaitGroup, url string, outputName *string, errOut *error)
 		return
 	}
 
+	// Get the video data with Audio
 	formats := video.Formats.WithAudioChannels()
 	stream, _, err := client.GetStream(video, &formats[0])
 
@@ -33,6 +36,7 @@ func download(wg *sync.WaitGroup, url string, outputName *string, errOut *error)
 
 	output := video.ID
 
+	// Create file to store video
 	file, err := os.Create(output)
 
 	if err != nil {
@@ -40,6 +44,7 @@ func download(wg *sync.WaitGroup, url string, outputName *string, errOut *error)
 		return
 	}
 
+	// Store video
 	_, err = io.Copy(file, stream)
 
 	if err != nil {
@@ -49,8 +54,10 @@ func download(wg *sync.WaitGroup, url string, outputName *string, errOut *error)
 	
 	defer file.Close()
 
+	// Convert video to audio
 	cmd := exec.Command("ffmpeg", "-i", output, "-vn", "-acodec", "libmp3lame", fmt.Sprintf("./songs/%v.mp3", output))
 	cmd.Run()
+	// Delete videos
 	cmd = exec.Command("rm", output)
 	cmd.Run()
 
@@ -76,6 +83,7 @@ func MixYoutubeAudio() (*godub.AudioSegment, error)  {
 	scanner.Scan()
 	output := scanner.Text()
 
+	// File names of downloaded audio files
 	var firstFile string
 	var secondFile string
 	var err error
@@ -90,10 +98,12 @@ func MixYoutubeAudio() (*godub.AudioSegment, error)  {
 		return nil, err
 	}
 
+	// Mix downloaded audio files
 	firstFile = "./songs/" + firstFile + ".mp3"
 	secondFile = "./songs/" + secondFile + ".mp3"
 	result, err := Mix(firstFile, secondFile, output)
 
+	// Delete downloaded audio files
 	cmd := exec.Command("rm", firstFile, secondFile)
 	cmd.Run()
 
@@ -101,6 +111,7 @@ func MixYoutubeAudio() (*godub.AudioSegment, error)  {
 		return nil, err
 	}
 
+	// Play song
 	fmt.Print("Play song? (y/n): ")
 	scanner.Scan()
 	ans := scanner.Text()
