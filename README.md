@@ -18,4 +18,7 @@ If you want to mix and play the song use the following flag:
 ```
 ./audio_mixer -p <FILE1> <FILE2> <OUTPUT_FILE>
 ```
-Note that for playing the song you'll need [mpv](https://mpv.io/installation/)
+The last way of mixing two audio files is by a YouTube URL. You can use this feature with the `-y` flag
+as shown in this example:
+
+![YouTube Mixer](./img/2023-05-26_01-39.png)
