@@ -10,7 +10,8 @@ import (
 	"github.com/iFaceless/godub"
 )
 
-func Mix(path1 string, path2 string) (*godub.AudioSegment, error) {
+func Mix(path1 string, path2 string, outputPath string) (*godub.AudioSegment, error) {
+	fmt.Println("Mxing songs ....")
 	segment, err := godub.NewLoader().Load(path1)
 
 	if err != nil {
@@ -34,6 +35,9 @@ func Mix(path1 string, path2 string) (*godub.AudioSegment, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	godub.NewExporter(outputPath).WithDstFormat("mp3").Export(overlaidSeg)
+	fmt.Println("Done")
 
 	return overlaidSeg, err
 }

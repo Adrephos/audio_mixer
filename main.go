@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/Adrephos/audio_mixer/src"
-	"github.com/iFaceless/godub"
 )
 
 func main() {
@@ -18,25 +17,27 @@ func main() {
 		if args[0] == "-p" {
 			index = 1
 		}
-		fmt.Println("Mxing songs ....")
-		mix, err := src.Mix(args[index], args[index + 1])
+		mix, err := src.Mix(args[index], args[index + 1], args[index + 2])
 
 		if err != nil {
 			fmt.Println(err)
-		} else {
-			outputPath = fmt.Sprintf("%s", args[index + 2])
-			godub.NewExporter(outputPath).WithDstFormat("mp3").Export(mix)
-			fmt.Println("Done")
 		}
 
 		if index == 1 {
 			src.Play(outputPath, mix.Duration())
 		}
 
-	}	else {
+	}	else if len(args) >= 1 {
+		if args[0] == "-y" {
+			_, err := src.MixYoutubeAudio()
+
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+
+	}else {
 		fmt.Println("Not enough arguments")
 	}
 
-	src.Download("https://www.youtube.com/watch?v=Ot5Y1WYVKkI", "songs/test")
-	
 }
