@@ -17,7 +17,8 @@ func main() {
 		if args[0] == "-p" {
 			index = 1
 		}
-		mix, err := src.Mix(args[index], args[index + 1], args[index + 2])
+		outputPath = args[index + 2]
+		mix, err := src.Mix(args[index], args[index + 1], outputPath)
 
 		if err != nil {
 			fmt.Println(err)
